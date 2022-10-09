@@ -1,0 +1,2 @@
+mongoexport -d tuitdb -c tuits -o tuits.json
+mongoexport -d tuitdb -c users -o users.json
