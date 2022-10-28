@@ -1,7 +1,7 @@
-import User from "../models/User";
+import User from "../models/users/User";
 
 /**
- * @file Declares all the User related DAO methods.
+ * @file Declares API for Users related data access object methods
  */
 export default interface UserDaoI {
   findAllUsers(): Promise<User[]>;
@@ -9,4 +9,5 @@ export default interface UserDaoI {
   createUser(user: User): Promise<User>;
   updateUser(uid: string, user: User): Promise<any>;
   deleteUser(uid: string): Promise<any>;
+  deleteAllUsers(): Promise<any>;
 }

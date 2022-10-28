@@ -3,8 +3,13 @@
  */
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
-import TuitController from "./controllers/TuitController";
+import CourseController from "./controllers/CourseController";
 import UserController from "./controllers/UserController";
+import TuitController from "./controllers/TuitController";
+import LikeController from "./controllers/LikeController";
+import BookmarkController from "./controllers/BookmarkController";
+import FollowerController from "./controllers/FollowerController";
+import MessageController from "./controllers/MessageController";
 import TuitDao from "./daos/TuitDao";
 import UserDao from "./daos/UserDao";
 const cors = require("cors");
@@ -38,8 +43,14 @@ app.get("/hello", (req: Request, res: Response) =>
   res.send("Welcome to Foundation of Software Engineering!")
 );
 
-new UserController(app, new UserDao());
-new TuitController(app, new TuitDao());
+// create RESTful Web service API
+const courseController = new CourseController(app);
+const userController = UserController.getInstance(app);
+const tuitController = TuitController.getInstance(app);
+const likesController = LikeController.getInstance(app);
+const bookmarkController = BookmarkController.getInstance(app);
+const followerController = FollowerController.getInstance(app);
+const messageController = MessageController.getInstance(app);
 
 /**
  * Start a server listening at port 4000 locally
