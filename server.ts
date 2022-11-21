@@ -13,10 +13,7 @@ import MessageController from "./controllers/MessageController";
 import TuitDao from "./daos/TuitDao";
 import UserDao from "./daos/UserDao";
 const cors = require("cors");
-const app = express();
-app.use(cors());
-app.use(express.json());
-
+const session = require("express-session");
 /**
  * Implements a MongoDB Compass local database connection.
  */
@@ -34,6 +31,23 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB");
   });
+
+const app = express();
+app.use(cors({ origin: "*", credentials: false }));
+
+let sess = {
+  secret: process.env.SECRET,
+  cookie: {
+    secure: false,
+  },
+};
+
+if (process.env.ENV === "PRODUCTION") {
+  app.set("trust proxy", 1); // trust first proxy
+  sess.cookie.secure = true; // serve secure cookies
+}
+
+app.use(express.json());
 
 app.get("/", (req: Request, res: Response) =>
   res.send("Welcome to Foundation of Software Engineering!!!!")
@@ -56,5 +70,6 @@ const messageController = MessageController.getInstance(app);
  * Start a server listening at port 4000 locally
  * but use environment variable PORT on Heroku if available.
  */
+
 const PORT = 4000;
 app.listen(process.env.PORT || PORT);
