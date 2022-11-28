@@ -11,7 +11,14 @@ const DB_NAME = "myFirstDatabase";
 const DB_QUERY = "retryWrites=true&w=majority";
 const connectionString = `${PROTOCOL}://${DB_USERNAME}:${DB_PASSWORD}@${HOST}/${DB_NAME}?${DB_QUERY}`;
 // connect to the database
-mongoose.connect(connectionString);
+// mongoose.connect(connectionString);
+
+mongoose
+  .connect(
+    "mongodb+srv://kunal:fse123456@cluster0.wuwbxi4.mongodb.net/?retryWrites=true&w=majority"
+  )
+  .then((_) => console.log("Connected!"))
+  .catch((e) => console.log("Auth failed"));
 
 export const login = (u: string, p: string) =>
   userDao
@@ -26,7 +33,7 @@ export const login = (u: string, p: string) =>
     .then((user) => user)
     .catch((e) => e);
 
-export const register = (u: string, p: string, e: string) =>
+export const signup = (u: string, p: string, e: string) =>
   userDao
     .findUserByUsername(u)
     .then((user) => {

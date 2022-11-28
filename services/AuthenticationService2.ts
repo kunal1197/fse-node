@@ -25,7 +25,7 @@ export const login = async (u: string, p: string) => {
   }
 };
 
-export const register = async (u: string, p: string, e: string) => {
+export const signup = async (u: string, p: string, e: string) => {
   try {
     const user = await userDao.findUserByUsername(u);
     if (user) {
@@ -51,9 +51,9 @@ export const initializeSalaries = async (salary: number) => {
   return values;
 };
 
-register("alice678", "alice234", "alice234@gmail.com");
+// signup("alice678", "alice234", "alice234@gmail.com");
 
-login("alice678", "alice234");
+// login("alice678", "alice234");
 // login('alice', 'alice123')
 
 // userDao.findAllUsers()
