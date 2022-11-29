@@ -74,5 +74,5 @@ AuthenticationController(app);
  * but use environment variable PORT on Heroku if available.
  */
 const PORT = 4000;
-// app.listen(process.env.PORT || PORT);
-app.listen(PORT);
+app.listen(process.env.PORT || PORT);
+// app.listen(PORT);
