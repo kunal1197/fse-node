@@ -89,10 +89,15 @@ export default class TuitController implements TuitControllerI {
         ? // @ts-ignore
           req.session["profile"]._id
         : req.params.uid;
+
+    // @ts-ignore
+    console.log(req.session);
+
     if (userId === "my") {
       res.sendStatus(503);
       return;
     }
+
     TuitController.tuitDao
       .findAllTuitsByUser(userId)
       .then((tuits: Tuit[]) => res.json(tuits));

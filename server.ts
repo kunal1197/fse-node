@@ -35,10 +35,11 @@ mongoose
   });
 
 const app = express();
-app.use(cors({ origin: "*", credentials: false }));
+app.use(cors({ credentials: true, origin: true }));
 
 let sess = {
-  secret: process.env.EXPRESS_SESSION_SECRET,
+  // secret: process.env.EXPRESS_SESSION_SECRET,
+  secret: "Ssdsd@#e$#Rfe@#$d#$#",
   saveUninitialized: true,
   resave: true,
   cookie: {
@@ -65,11 +66,13 @@ const userController = UserController.getInstance(app);
 const tuitController = TuitController.getInstance(app);
 const likesController = LikeController.getInstance(app);
 const dislikeController = DislikeController.getInstance(app);
+
 SessionController(app);
 AuthenticationController(app);
 /**
  * Start a server listening at port 4000 locally
  * but use environment variable PORT on Heroku if available.
  */
-const PORT = 4001;
-app.listen(process.env.PORT || PORT);
+const PORT = 4000;
+// app.listen(process.env.PORT || PORT);
+app.listen(PORT);

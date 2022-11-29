@@ -13,16 +13,25 @@ const AuthenticationController = (app: Express) => {
     console.log(req.session);
 
     const user = req.body;
+
     const username = user.username;
     const password = user.password;
-    console.log(password);
+
     const existingUser = await userDao.findUserByUsername(username);
+    if (!existingUser) {
+      console.log("User does not exist");
+      res.sendStatus(403);
+      return;
+    }
+
+    console.log("existingUser", existingUser);
     const match = await bcrypt.compare(password, existingUser.password);
 
     if (match) {
       existingUser.password = "*****";
       // @ts-ignore
       req.session["profile"] = existingUser;
+
       res.json(existingUser);
     } else {
       res.sendStatus(403);
@@ -70,7 +79,7 @@ const AuthenticationController = (app: Express) => {
   };
 
   app.post("/api/auth/login", login);
-  app.post("/api/auth/register", signup);
+  app.post("/api/auth/signup", signup);
   app.post("/api/auth/profile", profile);
   app.post("/api/auth/logout", logout);
 };

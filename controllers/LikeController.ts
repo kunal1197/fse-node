@@ -5,6 +5,8 @@ import { Express, Request, Response } from "express";
 import LikeDao from "../daos/LikeDao";
 import LikeControllerI from "../interfaces/LikeControllerI";
 import TuitDao from "../daos/TuitDao";
+import TuitSchema from "../mongoose/tuits/TuitSchema";
+import DislikeDao from "../daos/DislikeDao";
 
 /**
  * @class TuitController Implements RESTful Web service API for likes resource.
@@ -25,6 +27,7 @@ import TuitDao from "../daos/TuitDao";
  */
 export default class LikeController implements LikeControllerI {
   private static likeDao: LikeDao = LikeDao.getInstance();
+  private static dislikeDao: DislikeDao = DislikeDao.getInstance();
   private static tuitDao: TuitDao = TuitDao.getInstance();
   private static likeController: LikeController | null = null;
   /**
@@ -80,8 +83,8 @@ export default class LikeController implements LikeControllerI {
     const userId = uid === "me" && profile ? profile._id : uid;
 
     LikeController.likeDao.findAllTuitsLikedByUser(userId).then((likes) => {
-      const likesNonNullTuits = likes.filter((like) => like.tuit);
-      const tuitsFromLikes = likesNonNullTuits.map((like) => like.tuit);
+      const likesNonNullTuits = likes.filter((like: any) => like.tuit);
+      const tuitsFromLikes = likesNonNullTuits.map((like: any) => like.tuit);
       res.json(tuitsFromLikes);
     });
   };
@@ -95,10 +98,13 @@ export default class LikeController implements LikeControllerI {
    * database
    */
   userTogglesTuitLikes = async (req: Request, res: Response) => {
+    const dislikeDao = LikeController.dislikeDao;
     const likeDao = LikeController.likeDao;
     const tuitDao = LikeController.tuitDao;
+
     const uid = req.params.uid;
     const tid = req.params.tid;
+
     // @ts-ignore
     const profile = req.session["profile"];
     const userId = uid === "me" && profile ? profile._id : uid;
@@ -111,6 +117,9 @@ export default class LikeController implements LikeControllerI {
         tuit.stats.likes = howManyLikedTuit - 1;
       } else {
         await LikeController.likeDao.userLikesTuit(userId, tid);
+        await dislikeDao.userUndislikesTuit(userId, tid);
+        tuit.stats.dislikes =
+          tuit.stats.dislikes === 1 ? 0 : tuit.stats.dislikes;
         tuit.stats.likes = howManyLikedTuit + 1;
       }
       await tuitDao.updateLikes(tid, tuit.stats);
