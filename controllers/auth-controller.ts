@@ -51,7 +51,7 @@ const AuthenticationController = (app: Express) => {
 
     const existingUser = await userDao.findUserByUsername(req.body.username);
     if (existingUser) {
-      res.sendStatus(403);
+      res.send("Profile exists").status(403);
       return;
     } else {
       const insertedUser = await userDao.createUser(newUser);
@@ -68,7 +68,7 @@ const AuthenticationController = (app: Express) => {
     if (profile) {
       res.json(profile);
     } else {
-      res.sendStatus(403);
+      res.send("No profile").status(403);
     }
   };
 
